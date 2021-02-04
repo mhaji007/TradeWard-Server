@@ -1,4 +1,5 @@
 const app = require("./app")
+// require("dotenv").config();
 const dotenv = require("dotenv")
 
 // Set up config gile
