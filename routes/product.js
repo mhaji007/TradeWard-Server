@@ -8,4 +8,5 @@ const {getProducts} = require("../controllers/product")
 // The above is the same as below
 router.get("/products", getProducts)
 
+
 module.exports = router;
