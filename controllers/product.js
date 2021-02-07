@@ -15,3 +15,6 @@ exports.getProducts = (req, res, next) => {
     message:"Returns all products in database"
   })
 }
+
+
+
