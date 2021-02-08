@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { ObjectId } = mongoose.Schema;
 
 const productSchema = new mongoose.Schema({
   name: {
@@ -11,13 +10,12 @@ const productSchema = new mongoose.Schema({
   price: {
     type: Number,
     required: [true, "Product price is required"],
-    maxLength: [5, "Price cannot exceed 5 decimal values "],
+    maxLength: [5, "Product name cannot exceed 5 characters"],
     default: 0.0,
   },
   description: {
     type: String,
-    required: [true, "Description is required"],
-    maxLength: [2000, "Product description cannot exceed 100 characters"],
+    required: [true, "Product description is required"],
   },
   ratings: {
     type: Number,
@@ -25,7 +23,6 @@ const productSchema = new mongoose.Schema({
   },
   images: [
     {
-      // image id
       public_id: {
         type: String,
         required: true,
@@ -54,41 +51,47 @@ const productSchema = new mongoose.Schema({
         "Outdoor",
         "Home",
       ],
-      message: "Please select a corresponding category for this product",
+      message: "Please select one of the listed category for product",
     },
-    seller: {
-      type: String,
-      required: [true, "Please enter product seller"],
-    },
-    stock: {
-      type: Number,
-      required: [true, "Stock availablity is required"],
-      maxLength: [5, "Product name cannot exceed 5 characters"],
-      default: 0,
-    },
-    numofReviews: {
-      type: Number,
-      default:0,
-    },
-    reviews:[{
-      name:{
+  },
+  seller: {
+    type: String,
+    required: [true, "Product seller is required"],
+  },
+  stock: {
+    type: Number,
+    required: [true, "Product stock is required"],
+    maxLength: [5, "Product name cannot exceed 5 characters"],
+    default: 0,
+  },
+  numOfReviews: {
+    type: Number,
+    default: 0,
+  },
+  reviews: [
+    {
+      user: {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+        required: true,
+      },
+      name: {
         type: String,
         required: true,
       },
-      rating:{
-        type:Number,
+      rating: {
+        type: Number,
         required: true,
       },
-      comment:{
+      comment: {
         type: String,
-        required: true
-      }
-    }],
-    createdAt: {
-      type: Date,
-      default: Date.now
-    }
-
+        required: true,
+      },
+    },
+  ],
+  createdAt: {
+    type: Date,
+    default: Date.now,
   },
 });
 
