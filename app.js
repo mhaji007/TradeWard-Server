@@ -15,6 +15,7 @@ app.use(express.json());
 // Route middlewares
 app.use("/api/v1", products)
 
+// Error middleware
 app.use(errorMiddleware);
 
 module.exports = app

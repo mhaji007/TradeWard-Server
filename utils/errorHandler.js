@@ -1,4 +1,8 @@
-// Error Handler Class
+// Global Error Handler Class
+// used in the errors middleware
+
+
+
 class ErrorHandler extends Error {
   constructor(message, statusCode) {
     super(message);
