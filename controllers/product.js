@@ -1,10 +1,11 @@
 const Product = require("../models/product");
 const ErrorHandler = require("../utils/errorHandler");
-const catchAsyncErros= require("../middlewares/catchAsyncErros");
+const catchAsyncErros = require("../middlewares/catchAsyncErros");
+const APIFeatures = require("../utils/apiFeatures")
 
 // Create a new product
 
-exports.newProduct = catchAsyncErros( async (req, res, next) => {
+exports.newProduct = catchAsyncErros(async (req, res, next) => {
   const product = await Product.create(req.body);
   res.status(201).json({
     success: true,
@@ -32,7 +33,7 @@ exports.newProduct = catchAsyncErros( async (req, res, next) => {
 
 // Retrieve a single product
 
-exports.getSingleProduct = catchAsyncErros (async (req, res, next) => {
+exports.getSingleProduct = catchAsyncErros(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
 
   // Without custom error handler
@@ -45,15 +46,14 @@ exports.getSingleProduct = catchAsyncErros (async (req, res, next) => {
   // }
 
   if (!product) {
-    return next(new ErrorHandler("Product not found", 404))
+    return next(new ErrorHandler("Product not found", 404));
   }
 
   res.status(200).json({
     success: true,
     product,
   });
-}
-);
+});
 
 // Second method of retrieving a single product
 
@@ -70,10 +70,12 @@ exports.getSingleProduct = catchAsyncErros (async (req, res, next) => {
 //   }
 // };
 
-// List all products
-
+// List all products with searching by keyword
 exports.getProducts = catchAsyncErros(async (req, res, next) => {
-  const products = await Product.find();
+  // Product.find() returns this which is a query object - a Product collection variable
+  // The query.prototype we has many methods like limit(), sort(),
+  const apiFeatures = new APIFeatures(Product.find(), req.query).search();
+  const products = await apiFeatures.query;
 
   res.status(200).json({
     success: true,
@@ -81,6 +83,18 @@ exports.getProducts = catchAsyncErros(async (req, res, next) => {
     products,
   });
 });
+
+// List all products without searching by keyword
+
+// exports.getProducts = catchAsyncErros(async (req, res, next) => {
+//   const products = await Product.find();
+
+//   res.status(200).json({
+//     success: true,
+//     count: products.length,
+//     products,
+//   });
+// });
 
 // Second method of listing all products
 
@@ -93,8 +107,6 @@ exports.getProducts = catchAsyncErros(async (req, res, next) => {
 //     return res.status(400).send("Product listAll failed");
 //   }
 // };
-
-
 
 // Update a product
 
@@ -137,10 +149,9 @@ exports.updateProduct = catchAsyncErros(async (req, res, next) => {
 //   }
 // };
 
-
 // Delete a product
 
-exports.deleteProduct = catchAsyncErros (async (req, res, next) => {
+exports.deleteProduct = catchAsyncErros(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
 
   if (!product) {
