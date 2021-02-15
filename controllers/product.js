@@ -72,16 +72,21 @@ exports.getSingleProduct = catchAsyncErros(async (req, res, next) => {
 
 // List all products with searching by keyword
 exports.getProducts = catchAsyncErros(async (req, res, next) => {
+
+  const resPerPage= 4;
+  const productCount = await Product.countDocuments()
+
   // Model.find() returns a query, which has a separate find()
   // method that allows for adding additional filters.
   // Product.find() returns this which is a query object - a Product collection variable
-  // The query.prototype we has many methods like limit(), sort(),
-  const apiFeatures = new APIFeatures(Product.find(), req.query).search().filter();
+  // The query.prototype has many methods like limit(), sort(),
+  const apiFeatures = new APIFeatures(Product.find(), req.query).search().filter().pagination(resPerPage);
   const products = await apiFeatures.query;
 
   res.status(200).json({
     success: true,
     count: products.length,
+    productCount,
     products,
   });
 });

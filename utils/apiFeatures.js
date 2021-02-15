@@ -45,10 +45,18 @@ class APIFeatures {
     queryStr = queryStr.replace(/\b(gt|gte|lt|lte)\b/g, (match) => `$${match}`);
 
     console.log(queryStr);
-    // {price: {$gte:'1', $lte:'200'}}
+    // {"price": {"$gte":"1", "$lte":"200"}}
 
     this.query = this.query.find(JSON.parse(queryStr));
 
+    return this;
+  }
+  // /api/v1/products/?page=2
+  pagination(resPerPage) {
+    const currentPage = Number(this.queryStr.page) || 1;
+    const skip = resPerPage * (currentPage - 1);
+
+    this.query = this.query.limit(resPerPage).skip(skip);
     return this;
   }
 }
