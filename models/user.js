@@ -45,6 +45,115 @@ const userSchema = new mongoose.Schema({
   resetPasswordExpire: Date,
 });
 
+// Encrypting password before saving user
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
+    next();
+  }
 
+  this.password = await bcrypt.hash(this.password, 10);
+});
+
+// Compare user password
+userSchema.methods.comparePassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
+
+// Return JWT token
+userSchema.methods.getJwtToken = function () {
+  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_TIME,
+  });
+};
+
+// Generate password reset token
+userSchema.methods.getResetPasswordToken = function () {
+  // Generate token
+  const resetToken = crypto.randomBytes(20).toString("hex");
+
+  // Hash and set to resetPasswordToken
+  this.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+
+  // Set token expire time
+  this.resetPasswordExpire = Date.now() + 30 * 60 * 1000;
+
+  return resetToken;
+};
+
+
+
+// ====== Second method of authentication ====== //
+
+// Virtual fields ==> "password", used to get the plain password
+// and save the hashed password. It has a middleware role
+// virtual fields are additional fields for a given model.
+// Their values can be set manually or automatically with defined functionality.
+// Virtual properties don't get presisted in the database
+// They only exist logically and are not written to document's collection
+
+// password from client side
+// is passed to virtual
+
+// virtual field takes and return
+// the plain password. The plain password
+// is hashed and saved in the database in the process
+
+// userSchema
+//   .virtual("password")
+//   .set(function (password) {
+//     // create temp varaible called _password
+//     this._password = password;
+
+//     // generate salt (timestamp)
+//     // using custom function
+//     // this.salt refers to salt in schema
+//     // this.salt = this.makeSalt();
+
+//     // generate salt (timestamp)
+//     // using uuid package
+//     this.salt = uuidv4();
+//     // encrypt password
+//     // this.hashed_password is hassed-password in schema
+//     this.hashed_password = this.encryptPassword(password);
+//   })
+//   .get(function () {
+//     return this._password;
+//   });
+
+
+
+// Methods ==>
+// each user schema may be assigned methods
+// 1) authenticate compares and checks the incoming password
+// and the hashed version
+// 2) encryptPassword  which will hash the password upon
+//  user registeration and subsequent login attempts
+// 3) makeSalt
+// export user schema
+
+// userSchema.methods = {
+//   authenticate: function (plainText) {
+//     return this.encryptPassword(plainText) === this.hashed_password;
+//   },
+
+//   encryptPassword: function (password) {
+//     if (!password) return "";
+//     try {
+//       return crypto
+//         .createHmac("sha1", this.salt)
+//         .update(password)
+//         .digest("hex");
+//     } catch (err) {
+//       return "";
+//     }
+//   },
+
+//   // makeSalt: function () {
+//   //   return Math.round(new Date().valueOf() * Math.random()) + "";
+//   // },
+// };
 
 module.exports = mongoose.model("User", userSchema);
