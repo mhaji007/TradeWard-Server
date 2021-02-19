@@ -66,6 +66,8 @@ userSchema.methods.getJwtToken = function () {
   });
 };
 
+
+
 // Generate password reset token
 userSchema.methods.getResetPasswordToken = function () {
   // Generate token
@@ -82,6 +84,8 @@ userSchema.methods.getResetPasswordToken = function () {
 
   return resetToken;
 };
+
+
 
 
 
