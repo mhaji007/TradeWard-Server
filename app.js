@@ -1,4 +1,5 @@
 const express = require("express");
+const cookieParser = require("cookie-parser");
 
 const errorMiddleware = require("./middlewares/errors");
 
@@ -12,6 +13,7 @@ const app = express();
 
 // Global middlewares (to be used on all routes)
 app.use(express.json());
+app.use(cookieParser())
 
 // Route middlewares
 app.use("/api/v1", products)
