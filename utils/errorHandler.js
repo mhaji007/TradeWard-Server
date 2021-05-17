@@ -8,6 +8,7 @@ class ErrorHandler extends Error {
     super(message);
     this.statusCode = statusCode;
     // Create .stack property on the target object
+    // this represents ErrorHandler object
     Error.captureStackTrace(this, this.constructor);
   }
 }

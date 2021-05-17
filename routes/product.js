@@ -13,23 +13,28 @@ const { isAuthenticatedUser, authorizeRoles } = require("../middlewares/auth");
 
 // router.route("/products").get(getProducts);
 // The above is the same as below
+
+// Chaining is possible using the above mehtod
+
+// router.route("/products").get(getProducts).delete(deleteProducrs);
+
 router.get("/products", getProducts);
 router.get("/product/:id", getSingleProduct);
 router.post(
   "/admin/product/new",
-  isauthenticatedUser,
+  isAuthenticatedUser,
   authorizeRoles("admin"),
   newProduct
 );
 router.put(
   "/admin/product/:id",
-  isauthenticatedUser,
+  isAuthenticatedUser,
   authorizeRoles("admin"),
   updateProduct
 );
 router.delete(
   "/admin/product/:id",
-  isauthenticatedUser,
+  isAuthenticatedUser,
   authorizeRoles("admin"),
   deleteProduct
 );

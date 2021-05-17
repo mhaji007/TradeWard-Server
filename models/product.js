@@ -17,10 +17,14 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: [true, "Product description is required"],
   },
+  // The average rating of a product
   ratings: {
     type: Number,
     default: 0,
   },
+  // An array of images (objects)
+  // each containting a public-url obtained from cloudinary
+  // and a url where cloudinary houses the image
   images: [
     {
       public_id: {
@@ -51,6 +55,7 @@ const productSchema = new mongoose.Schema({
         "Outdoor",
         "Home",
       ],
+      // If one of the pre-set categories is not selected
       message: "Please select one of the listed category for product",
     },
   },
@@ -64,10 +69,12 @@ const productSchema = new mongoose.Schema({
     maxLength: [5, "Product name cannot exceed 5 characters"],
     default: 0,
   },
+  // Total number of reviews
   numOfReviews: {
     type: Number,
     default: 0,
   },
+  // Array of reviews
   reviews: [
     {
       user: {

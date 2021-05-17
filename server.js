@@ -5,7 +5,6 @@ const connectToDatabase = require("./config/database");
 const dotenv = require("dotenv");
 
 // Handle uncaught exceptions (e.g., console.log(a);)
-
 process.on("uncaughtException", (err) => {
   console.log(`ERROR: ${err.message}`);
   console.log(`Shutting down due to uncaught exception`);
@@ -21,6 +20,7 @@ dotenv.config({ path: "./config/config.env" });
 connectToDatabase();
 
 const port = process.env.PORT;
+
 
 const server = app.listen(port, () =>
   console.log(
