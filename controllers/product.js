@@ -74,6 +74,7 @@ exports.getSingleProduct = catchAsyncErros(async (req, res, next) => {
 // List all products with searching by keyword
 exports.getProducts = catchAsyncErros(async (req, res, next) => {
   const resPerPage = 4;
+  // Total products in the database (needed for implementing pagination on the frontend)
   const productCount = await Product.countDocuments();
 
   // Model.find() returns a query, which has a separate find()
@@ -84,6 +85,7 @@ exports.getProducts = catchAsyncErros(async (req, res, next) => {
     .search()
     .filter()
     .pagination(resPerPage);
+    
   const products = await apiFeatures.query;
 
   res.status(200).json({
