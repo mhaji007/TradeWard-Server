@@ -8,6 +8,7 @@ const crypto = require("crypto");
 const sendToken = require("../utils/jwtToken");
 
 // Register a user   => /api/v1/register
+
 exports.registerUser = catchAsyncErros(async (req, res, next) => {
   const { name, email, password } = req.body;
 
@@ -28,9 +29,11 @@ exports.registerUser = catchAsyncErros(async (req, res, next) => {
   //   token,
   // });
 
+  // Generate a token and sent it back in cookie
   sendToken(user, 200, res);
 });
 
+// Login a user   => /api/v1/login
 exports.loginUser = catchAsyncErros(async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -42,6 +45,7 @@ exports.loginUser = catchAsyncErros(async (req, res, next) => {
   // Find user in database
   const user = await User.findOne({ email }).select("+password");
 
+  //  401 -> Unauthenticated user
   if (!user) {
     return next(new ErrorHandler("Invalid Email or Password", 401));
   }
@@ -60,6 +64,7 @@ exports.loginUser = catchAsyncErros(async (req, res, next) => {
   //   token,
   // });
 
+  // Generate a token and sent it back in cookie
   sendToken(user, 200, res);
 });
 

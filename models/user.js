@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, "Please enter your name"],
-    maxLength: [30, "Your name cannot exceed 30 characters"],
+    maxlength: [30, "Your name cannot exceed 30 characters"],
   },
   email: {
     type: String,
@@ -41,6 +41,9 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  // When requesting password reset,
+  // we need to store reset password token
+  // and password expiration sent in the email
   resetPasswordToken: String,
   resetPasswordExpire: Date,
 });
@@ -61,6 +64,7 @@ userSchema.methods.comparePassword = async function (enteredPassword) {
 
 // Return JWT token
 userSchema.methods.getJwtToken = function () {
+  // Sign with payload (what we want to store as payload for user)
   return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_TIME,
   });
@@ -120,7 +124,7 @@ userSchema.methods.getResetPasswordToken = function () {
 //     // using uuid package
 //     this.salt = uuidv4();
 //     // encrypt password
-//     // this.hashed_password is hassed-password in schema
+//     // this.hashed_password is hashed-password in schema
 //     this.hashed_password = this.encryptPassword(password);
 //   })
 //   .get(function () {

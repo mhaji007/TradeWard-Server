@@ -12,8 +12,8 @@ const sendToken = (user, statusCode, res) => {
     // Make sure the following line is included
     // This ensures that the cookie is a http cookie
     // and cannot be accessed via JavaScript client-side
-    // if this line is not included. The cookie will not
-    // be a http cookie and accessible via JS on the frontend
+    // if this line is not included, the cookie will not
+    // be a http cookie and will be accessible via JS on the frontend
     httpOnly: true,
   };
 

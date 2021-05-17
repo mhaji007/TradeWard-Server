@@ -3,19 +3,19 @@ const mongoose = require("mongoose");
 const productSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, "Product name is required"],
+    required: [true, "Please enter product name"],
     trim: true,
-    maxLength: [100, "Product name cannot exceed 100 characters"],
+    maxlength: [100, "Product name cannot exceed 100 characters"],
   },
   price: {
     type: Number,
-    required: [true, "Product price is required"],
-    maxLength: [5, "Product name cannot exceed 5 characters"],
+    required: [true, "Please enter product price"],
+    maxlength: [5, "Product name cannot exceed 5 characters"],
     default: 0.0,
   },
   description: {
     type: String,
-    required: [true, "Product description is required"],
+    required: [true, "Please enter product description"],
   },
   // The average rating of a product
   ratings: {
@@ -39,7 +39,7 @@ const productSchema = new mongoose.Schema({
   ],
   category: {
     type: String,
-    required: [true, "Product category is required"],
+    required: [true, "Please enter product category"],
     enum: {
       values: [
         "Electronics",
@@ -61,12 +61,12 @@ const productSchema = new mongoose.Schema({
   },
   seller: {
     type: String,
-    required: [true, "Product seller is required"],
+    required: [true, "Please select a product seller"],
   },
   stock: {
     type: Number,
-    required: [true, "Product stock is required"],
-    maxLength: [5, "Product name cannot exceed 5 characters"],
+    required: [true, "Please indicate product stock"],
+    maxlength: [5, "Product name cannot exceed 5 characters"],
     default: 0,
   },
   // Total number of reviews
