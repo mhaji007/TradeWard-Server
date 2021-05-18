@@ -62,7 +62,7 @@ userSchema.methods.comparePassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-// Return JWT token
+// Return JWT token (Stateful JWT auth method - JWT token and cookie)
 userSchema.methods.getJwtToken = function () {
   // Sign with payload (what we want to store as payload for user)
   return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {

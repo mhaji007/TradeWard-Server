@@ -7,7 +7,7 @@ const crypto = require("crypto");
 
 const sendToken = require("../utils/jwtToken");
 
-// Register a user   => /api/v1/register
+// Register a user => /api/v1/register
 
 exports.registerUser = catchAsyncErros(async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -33,7 +33,7 @@ exports.registerUser = catchAsyncErros(async (req, res, next) => {
   sendToken(user, 200, res);
 });
 
-// Login a user   => /api/v1/login
+// Login user => /api/v1/login
 exports.loginUser = catchAsyncErros(async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -69,7 +69,7 @@ exports.loginUser = catchAsyncErros(async (req, res, next) => {
 });
 
 
-
+// Logout user => /api/v1/logout
 exports.logout = catchAsyncErros(async (req, res, next) => {
   res.cookie("token", null, {
     expires: new Date(Date.now()),

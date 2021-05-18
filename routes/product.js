@@ -13,10 +13,13 @@ const { isAuthenticatedUser, authorizeRoles } = require("../middlewares/auth");
 
 // router.route("/products").get(getProducts);
 // The above is the same as below
+// router.get("/products", getProducts);
 
 // Chaining is possible using the above mehtod
-
 // router.route("/products").get(getProducts).delete(deleteProducrs);
+
+// Alternative method of applying middlewares
+// router.route("/products").get(isAuthenticatedUser, getProducts);
 
 router.get("/products", getProducts);
 router.get("/product/:id", getSingleProduct);

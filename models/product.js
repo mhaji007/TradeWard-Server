@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { ObjectId } = mongoose.Schema;
 
 const productSchema = new mongoose.Schema({
   name: {
@@ -78,7 +79,7 @@ const productSchema = new mongoose.Schema({
   reviews: [
     {
       user: {
-        type: mongoose.Schema.ObjectId,
+        type: ObjectId,
         ref: "User",
         required: true,
       },
@@ -96,6 +97,11 @@ const productSchema = new mongoose.Schema({
       },
     },
   ],
+  user: {
+    type: ObjectId,
+    ref: "User",
+    required: true,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
