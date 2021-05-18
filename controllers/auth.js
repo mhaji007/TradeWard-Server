@@ -86,7 +86,7 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
   // Get reset token
   const resetToken = user.getResetPasswordToken();
 
-  // Alternatively, you could generate a new token here
+  // Alternatively, we could generate a new token here
   // generate a token with user id and secret
   // const token = jwt.sign(
   //   { _id: user._id, iss: "NODEAPI" },
@@ -113,7 +113,7 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
     "host"
   )}/password/reset/${resetToken}`;
 
-  const message = `Please use the following link to reset your password::\n\n${resetUrl}\n\nIf you have not requested this email, ignore this message.`;
+  const message = `Please use the following link to reset your password:\n\n${resetUrl}\n\nIf you have not requested a reset, please ignore this email.`;
 
   try {
     await sendEmail({
@@ -135,6 +135,46 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler(error.message, 500));
   }
 })
+
+// Reset Password   =>  /api/v1/password/reset/:token
+exports.resetPassword = catchAsyncErrors(async (req, res, next) => {
+
+  // Retrieve token from URL and hash it
+  const resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(req.params.token)
+    .digest("hex");
+
+  const user = await User.findOne({
+    resetPasswordToken,
+    // Make sure the expiry date is greater than current time
+    resetPasswordExpire: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    return next(
+      new ErrorHandler(
+        "Password reset token is invalid or has been expired",
+        400
+      )
+    );
+  }
+
+  if (req.body.password !== req.body.confirmPassword) {
+    return next(new ErrorHandler("Passwords do not match", 400));
+  }
+
+  // Setup new password
+  user.password = req.body.password;
+
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpire = undefined;
+
+  await user.save();
+
+  sendToken(user, 200, res);
+});
+
 
 
 // Logout user => /api/v1/logout
