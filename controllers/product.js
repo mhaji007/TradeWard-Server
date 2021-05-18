@@ -1,11 +1,11 @@
 const Product = require("../models/product");
 const ErrorHandler = require("../utils/errorHandler");
-const catchAsyncErros = require("../middlewares/catchAsyncErros");
+const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const APIFeatures = require("../utils/apiFeatures");
 
 // Create a new product
 
-exports.newProduct = catchAsyncErros(async (req, res, next) => {
+exports.newProduct = catchAsyncErrors(async (req, res, next) => {
   req.body.user = req.user.id;
   const product = await Product.create(req.body);
   res.status(201).json({
@@ -34,7 +34,7 @@ exports.newProduct = catchAsyncErros(async (req, res, next) => {
 
 // Retrieve a single product
 
-exports.getSingleProduct = catchAsyncErros(async (req, res, next) => {
+exports.getSingleProduct = catchAsyncErrors(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
 
   // Without custom error handler
@@ -72,7 +72,7 @@ exports.getSingleProduct = catchAsyncErros(async (req, res, next) => {
 // };
 
 // List all products with searching by keyword
-exports.getProducts = catchAsyncErros(async (req, res, next) => {
+exports.getProducts = catchAsyncErrors(async (req, res, next) => {
   const resPerPage = 4;
   // Total products in the database (needed for implementing pagination on the frontend)
   const productCount = await Product.countDocuments();
@@ -85,7 +85,7 @@ exports.getProducts = catchAsyncErros(async (req, res, next) => {
     .search()
     .filter()
     .pagination(resPerPage);
-    
+
   const products = await apiFeatures.query;
 
   res.status(200).json({
@@ -98,7 +98,7 @@ exports.getProducts = catchAsyncErros(async (req, res, next) => {
 
 // List all products without searching by keyword
 
-// exports.getProducts = catchAsyncErros(async (req, res, next) => {
+// exports.getProducts = catchAsyncErrors(async (req, res, next) => {
 //   const products = await Product.find();
 
 //   res.status(200).json({
@@ -122,7 +122,7 @@ exports.getProducts = catchAsyncErros(async (req, res, next) => {
 
 // Update a product
 
-exports.updateProduct = catchAsyncErros(async (req, res, next) => {
+exports.updateProduct = catchAsyncErrors(async (req, res, next) => {
   let product = await Product.findById(req.params.id);
 
   // if (!product) {
@@ -167,7 +167,7 @@ exports.updateProduct = catchAsyncErros(async (req, res, next) => {
 
 // Delete a product
 
-exports.deleteProduct = catchAsyncErros(async (req, res, next) => {
+exports.deleteProduct = catchAsyncErrors(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
 
   // if (!product) {
