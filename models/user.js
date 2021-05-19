@@ -74,7 +74,6 @@ userSchema.methods.getJwtToken = function () {
 
 // Generate password reset token
 userSchema.methods.getResetPasswordToken = function () {
-
   // Generate token
 
   // crypto.randomBytes returns a buffer
@@ -86,9 +85,16 @@ userSchema.methods.getResetPasswordToken = function () {
     .update(resetToken)
     .digest("hex");
 
+  // resetPasswordToken field of database now hold
+  // hashed value of resetToken
+
   // Set token expire time
   this.resetPasswordExpire = Date.now() + 30 * 60 * 1000;
 
+  // resetPasswordExpire field of database now hold
+  // value set above
+
+  // Return un-hashed resetToken
   return resetToken;
 };
 

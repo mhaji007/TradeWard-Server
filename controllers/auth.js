@@ -84,6 +84,10 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
   }
 
   // Get reset token
+  // user.getResetPasswordToken() returns the un-hashed reset token into resetToken varaible
+  // this un-hashed token is used further down for reset url construction. At the same time
+  // getResetPasswordToken hashes the reset token internally (in user model) and stores the
+  // hashed in the resetPasswordToken of the database to be saved
   const resetToken = user.getResetPasswordToken();
 
   // Alternatively, we could generate a new token here
@@ -136,7 +140,7 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
   }
 })
 
-// Reset Password   =>  /api/v1/password/reset/:token
+// Reset Password => /api/v1/password/reset/:token
 exports.resetPassword = catchAsyncErrors(async (req, res, next) => {
 
   // Retrieve token from URL and hash it
@@ -164,14 +168,13 @@ exports.resetPassword = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("Passwords do not match", 400));
   }
 
-  // Setup new password
+  // Set up new password
   user.password = req.body.password;
-
   user.resetPasswordToken = undefined;
   user.resetPasswordExpire = undefined;
 
   await user.save();
-
+  // Send token back again
   sendToken(user, 200, res);
 });
 

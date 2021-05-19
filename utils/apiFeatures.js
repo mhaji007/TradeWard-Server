@@ -3,7 +3,7 @@ class APIFeatures {
 
   // In product controller apiFeatures is instantiated as follows:
   // const apiFeatures = new APIFeatures(Product.find(), req.query)
-  // therefor we have the following as constructor arguments
+  // therefore we have the following as constructor arguments
   // query = Product.find()
   // queryStr = req.query
 
