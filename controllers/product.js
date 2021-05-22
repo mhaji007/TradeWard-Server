@@ -80,7 +80,7 @@ exports.getProducts = catchAsyncErrors(async (req, res, next) => {
   // Model.find() returns a query, which has a separate find()
   // method that allows for adding additional filters.
   // Product.find() returns this which is a query object - a Product collection variable
-  // The query.prototype has many methods like limit(), sort(),
+  // The query.prototype has many methods like limit(), sort(), etc.
   const apiFeatures = new APIFeatures(Product.find(), req.query)
     .search()
     .filter()

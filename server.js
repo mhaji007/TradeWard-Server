@@ -4,7 +4,8 @@ const connectToDatabase = require("./config/database");
 // require("dotenv").config();
 const dotenv = require("dotenv");
 
-// Handle uncaught exceptions (e.g., console.log(a);)
+// Handle uncaught exceptions (e.g., console.log(a) => ReferenceError: a is not defined).
+// Handled before database connection
 process.on("uncaughtException", (err) => {
   console.log(`ERROR: ${err.message}`);
   console.log(`Shutting down due to uncaught exception`);

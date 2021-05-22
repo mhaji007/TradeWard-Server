@@ -106,6 +106,7 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
   // we have to provide all required fields that are specified in the model.
   // And in this case, we are only storing the password recovery token,
   // so that is why this option is used to not validate before saving the document.
+  // Below line saves the resetPasswordToken hashed in the previous step
   await user.save({ validateBeforeSave: false });
 
   // Create reset password url
