@@ -17,7 +17,7 @@ class APIFeatures {
       ? // Search in database
         {
           // based on name
-          // using regex instead of directly passing keyword directly to
+          // using regex instead of directly passing keyword directly
           // in await Product.find() has the advatnage of a wider search scope
           // that is, for example if user enters "a" it retruns all products that
           // have letter "a" in their name
@@ -76,9 +76,10 @@ class APIFeatures {
     // example 1: {"category":"Laptops"}
     // example 2: {"price": {"gte":"1", "lte":"200"}}
 
+    // Advance filtering using: lt, lte, get, gte, in (for searching within the array)
     // find a match for the specified character sequence at the start and
     // end of the queryStr
-    queryStr = queryStr.replace(/\b(gt|gte|lt|lte)\b/g, (match) => `$${match}`);
+    queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, (match) => `$${match}`);
 
     console.log(queryStr);
     //example 2: {"price": {"$gte":"1", "$lte":"200"}}

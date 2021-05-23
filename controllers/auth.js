@@ -85,7 +85,7 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
 
   // Get reset token
   // user.getResetPasswordToken() returns the un-hashed reset token into resetToken varaible
-  // this un-hashed token is used further down for reset url construction. At the same time
+  // this un-hashed token is used further down used for reset url construction. At the same time
   // getResetPasswordToken hashes the reset token internally (in user model) and stores the
   // hashed in the resetPasswordToken of the database to be saved
   const resetToken = user.getResetPasswordToken();
