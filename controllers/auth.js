@@ -69,7 +69,6 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
   sendToken(user, 200, res);
 });
 
-
 // Forgot Password   =>  /api/v1/password/forgot
 exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
@@ -139,11 +138,10 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
 
     return next(new ErrorHandler(error.message, 500));
   }
-})
+});
 
 // Reset Password => /api/v1/password/reset/:token
 exports.resetPassword = catchAsyncErrors(async (req, res, next) => {
-
   // Retrieve token from URL and hash it
   const resetPasswordToken = crypto
     .createHash("sha256")
@@ -179,7 +177,6 @@ exports.resetPassword = catchAsyncErrors(async (req, res, next) => {
   sendToken(user, 200, res);
 });
 
-
 // Get currently logged-in user details => /api/v1/me
 exports.getUserProfile = catchAsyncErrors(async (req, res, next) => {
   // isAuthenticatedUser implemented in middlewares/auth provides id
@@ -189,10 +186,24 @@ exports.getUserProfile = catchAsyncErrors(async (req, res, next) => {
     success: true,
     user,
   });
-})
+});
 
+// Update / Change password   =>  /api/v1/password/update
+exports.updatePassword = catchAsyncErrors(async (req, res, next) => {
+  // Retrieve currently logged-in user (include password)
+  const user = await User.findById(req.user.id).select("+password");
 
+  // Check previous user password
+  const isMatched = await user.comparePassword(req.body.oldPassword);
+  if (!isMatched) {
+    return next(new ErrorHandler("Old password is incorrect"));
+  }
 
+  user.password = req.body.password;
+  await user.save();
+
+  sendToken(user, 200, res);
+});
 
 // Logout user => /api/v1/logout
 exports.logout = catchAsyncErrors(async (req, res, next) => {

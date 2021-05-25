@@ -25,6 +25,13 @@ class APIFeatures {
             $regex: this.queryStr.keyword,
             $options: "i",
           },
+          //  Now we would have something like
+          //  find({name:{
+          //   $regex: this.queryStr.keyword,
+          //   $options: "i",
+          // }})
+          //  Or
+          //  find({name:{}})
         }
       : {};
     // this.query = Product.find()
@@ -79,7 +86,10 @@ class APIFeatures {
     // Advance filtering using: lt, lte, get, gte, in (for searching within the array)
     // find a match for the specified character sequence at the start and
     // end of the queryStr
-    queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, (match) => `$${match}`);
+    queryStr = queryStr.replace(
+      /\b(gt|gte|lt|lte|in)\b/g,
+      (match) => `$${match}`
+    );
 
     console.log(queryStr);
     //example 2: {"price": {"$gte":"1", "$lte":"200"}}
