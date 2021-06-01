@@ -62,7 +62,7 @@ class APIFeatures {
 
     // Removing fields from the query (filter searches by category)
     // so as to use only fields that are defined in the schema
-    const removeFields = ["keyword", "limit", "page", "sort"];
+    const removeFields = ["keyword", "limit", "page", "sort", "fields"];
 
     removeFields.forEach((el) => delete queryCopy[el]);
 
@@ -103,12 +103,29 @@ class APIFeatures {
 
   sort() {
     if (this.queryStr.sort) {
+      // Sort by multiple categories
       const sortBy = this.queryStr.sort.split(",").join(" ");
       this.query = this.query.sort(sortBy);
+      // Default source value (applied if user has not supplied one)
     } else {
+      // Minus sign make it so the latest product displays at the top
       this.query = this.query.sort("-createdAt");
     }
     return this;
+  }
+
+  limitFields () {
+    if(this.queryStr.fields){
+      const fields = this.queryStr.fields.split(",").join(" ");
+      this.query = this.query.select(fields);
+      // Default limit value (applied if user has not supplied one)
+    } else {
+      // If no limit is supplied bu the user only remove the __v field
+      // which is automatically added by Mongodb at the time of object creation
+      this.query = this.query.select("-__v");
+
+    }
+    return this
   }
 
   // /api/v1/products/?page=2
