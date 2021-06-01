@@ -126,7 +126,8 @@ class APIFeatures {
     }
     return this;
   }
-
+  // MongoDB provides text indexes to support text search queries on string content.
+  // text indexes can include any field whose value is a string or an array of string elements
   searchByQuery() {
     if (this.queryStr.q) {
       const qu = this.queryStr.q.split("-").join(" ");
@@ -139,6 +140,9 @@ class APIFeatures {
   // /api/v1/products/?page=2
   pagination(resPerPage) {
     // Current page that we are on (is being requested)
+    // const currentPage = parseInt(this.queryStr.page, 10) || 1;
+    // if resPerPage (aka here limit) were obtained from query string
+    // const limit = parseInt(this.queryStr.page, 10) || 1;
     const currentPage = Number(this.queryStr.page) || 1;
     // If we have 30 products and displaying 10 products per page,
     // If we want to navigate to page 2, we have to skip the first 10

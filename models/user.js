@@ -35,6 +35,10 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
+    // enum:{
+    //   values:['user', 'anotheRoleButNotAdmin'],
+    //   message:"Please select a role"
+    // }
     default: "user",
   },
   createdAt: {

@@ -87,6 +87,9 @@ exports.getProducts = catchAsyncErrors(async (req, res, next) => {
     .sort()
     .limitFields()
     .pagination(resPerPage);
+    // if resPerPage(limit) was passed through
+    // query string below would be used
+    // .paagination();
 
   const products = await apiFeatures.query;
 

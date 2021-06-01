@@ -17,6 +17,16 @@ const sendToken = (user, statusCode, res) => {
     httpOnly: true,
   };
 
+  // Turn on secure mode in production
+  // A cookie with the Secure attribute is sent to the server only
+  // with an encrypted request over the HTTPS protocol, never with
+  // unsecured HTTP (except on localhost), and therefore can't easily
+  //  be accessed by a man-in-the-middle attacker
+
+  // if (process.env.NODE_ENV === "production") {
+  //   options.secure = true;
+  // }
+
   res.status(statusCode).cookie("token", token, options).json({
     success: true,
     token,

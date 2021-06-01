@@ -21,22 +21,46 @@ exports.isAuthenticatedUser = catchAsyncErros(async (req, res, next) => {
   // Cookies are sent with each request (req.cookies).
   // We can authenticate users on the backend via cookies.
   // Access token from req.cookies.
+
+    const { token } = req.cookies;
+
+    // Check whether the cookie exists
+    if (!token) {
+      return next(
+        new ErrorHandler("Login first to access this resource.", 401)
+      );
+    }
+    // If token exists verify the user
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    // Look for user in database and make the logged-in available on req.user
+    req.user = await User.findById(decoded.id);
+
+    next();
+
   // Another way would be to move the token to the frontend
   // and afterwards pass the token again to the backend,
   // providing the authorization in the headers
   // to verify it
-  const { token } = req.cookies;
 
-  // Check whether the cookie exists
-  if (!token) {
-    return next(new ErrorHandler("Login first to access this resource.", 401));
-  }
-  // If token exists verify the user
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  // Look for user in database and make the logged-in available on req.user
-  req.user = await User.findById(decoded.id);
+  //  let token;
 
-  next();
+  //  if (
+  //    req.headers.authorization &&
+  //    req.headers.authorization.startsWith("Bearer")
+  //  ) {
+  //    token = req.headers.authorization.split(" ")[1];
+  //  }
+
+  //  if (!token) {
+  //    return next(new ErrorHandler("Login first to access this resource.", 401));
+  //  }
+
+  //  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  //  req.user = await User.findById(decoded.id);
+
+  //  next();
+
+
 });
 
 // Handle users roles
