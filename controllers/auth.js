@@ -201,7 +201,8 @@ exports.updatePassword = catchAsyncErrors(async (req, res, next) => {
 
   user.password = req.body.password;
   await user.save();
-
+  // we have updated the password
+  // and that's why we reassign token to that user with updated info
   sendToken(user, 200, res);
 });
 

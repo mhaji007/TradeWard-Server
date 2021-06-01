@@ -62,7 +62,7 @@ class APIFeatures {
 
     // Removing fields from the query (filter searches by category)
     // so as to use only fields that are defined in the schema
-    const removeFields = ["keyword", "limit", "page"];
+    const removeFields = ["keyword", "limit", "page", "sort"];
 
     removeFields.forEach((el) => delete queryCopy[el]);
 
@@ -72,7 +72,7 @@ class APIFeatures {
 
     // At this point queryCopy has the above format.
     // gte and lte are Mongoose operators but to be able to use them
-    // there is a need for a '$' sign before the operators. Therefore
+    // we need to insert a '$' sign before these operators. Therefore
     // we need to perfrom a replace function on queryCopy. In order
     // to apply this function first we have to convert the plain object to
     // JSON object
@@ -98,6 +98,16 @@ class APIFeatures {
     // convert back to string for database query execution
     this.query = this.query.find(JSON.parse(queryStr));
 
+    return this;
+  }
+
+  sort() {
+    if (this.queryStr.sort) {
+      const sortBy = this.queryStr.sort.split(",").join(" ");
+      this.query = this.query.sort(sortBy);
+    } else {
+      this.query = this.query.sort("-createdAt");
+    }
     return this;
   }
 
