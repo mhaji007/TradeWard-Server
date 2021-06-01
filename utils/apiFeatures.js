@@ -42,9 +42,9 @@ class APIFeatures {
 
     // Further clarification
 
-    // const query = Customer.find();
+    // const query = Products.find();
     // query instanceof mongoose.Query; // true
-    // const docs = await query; // Get the documents
+    // const docs = await query; // Get the products
 
     this.query = this.query.find({ ...keyword });
     // Returns APIFeatures
@@ -114,8 +114,8 @@ class APIFeatures {
     return this;
   }
 
-  limitFields () {
-    if(this.queryStr.fields){
+  limitFields() {
+    if (this.queryStr.fields) {
       const fields = this.queryStr.fields.split(",").join(" ");
       this.query = this.query.select(fields);
       // Default limit value (applied if user has not supplied one)
@@ -123,9 +123,17 @@ class APIFeatures {
       // If no limit is supplied bu the user only remove the __v field
       // which is automatically added by Mongodb at the time of object creation
       this.query = this.query.select("-__v");
-
     }
-    return this
+    return this;
+  }
+
+  searchByQuery() {
+    if (this.queryStr.q) {
+      const qu = this.queryStr.q.split("-").join(" ");
+      this.query = this.query.find({ $text: { $search: "\"" + qu + "\"" } });
+    }
+
+    return this;
   }
 
   // /api/v1/products/?page=2
