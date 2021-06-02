@@ -15,9 +15,9 @@ const { isAuthenticatedUser } = require("../middlewares/auth");
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
-router.post("/logout", logout);
+router.get("/logout", isAuthenticatedUser, logout);
 router.post("/password/forgot", forgotPassword);
-router.post("/password/reset/:token", resetPassword);
+router.put("/password/reset/:token", resetPassword);
 router.get("/me", isAuthenticatedUser, getUserProfile);
 router.put("/password/update", updatePassword);
 

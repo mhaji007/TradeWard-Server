@@ -80,7 +80,7 @@ userSchema.methods.getJwtToken = function () {
 userSchema.methods.getResetPasswordToken = function () {
   // Generate token
 
-  // crypto.randomBytes returns a buffer
+  // crypto.randomBytes returns a buffer that is converted to string
   const resetToken = crypto.randomBytes(20).toString("hex");
 
   // Hash and set to resetPasswordToken
@@ -99,6 +99,7 @@ userSchema.methods.getResetPasswordToken = function () {
   // value set above
 
   // Return un-hashed resetToken
+  // to be used in sending email to the user
   return resetToken;
 };
 

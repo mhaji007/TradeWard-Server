@@ -76,7 +76,7 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
   if (!user) {
     return next(
       new ErrorHandler(
-        "No user associated with this email found in database",
+        "No user associated with this email was found in database",
         404
       )
     );
@@ -84,7 +84,7 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
 
   // Get reset token
   // user.getResetPasswordToken() returns the un-hashed reset token into resetToken varaible
-  // this un-hashed token is used further down used for reset url construction. At the same time
+  // this un-hashed token is used further down in reset url construction. At the same time
   // getResetPasswordToken hashes the reset token internally (in user model) and stores the
   // hashed in the resetPasswordToken of the database to be saved
   const resetToken = user.getResetPasswordToken();
@@ -115,7 +115,7 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
 
   const resetUrl = `${req.protocol}://${req.get(
     "host"
-  )}/password/reset/${resetToken}`;
+  )}/api/v1/password/reset/${resetToken}`;
 
   const message = `Please use the following link to reset your password:\n\n${resetUrl}\n\nIf you have not requested a reset, please ignore this email.`;
 
@@ -148,12 +148,13 @@ exports.resetPassword = catchAsyncErrors(async (req, res, next) => {
     .update(req.params.token)
     .digest("hex");
 
+  // Find user with this token
   const user = await User.findOne({
     resetPasswordToken,
     // Make sure the expiry date is greater than current time
     resetPasswordExpire: { $gt: Date.now() },
   });
-
+  // If reset token is invalud or has been expired
   if (!user) {
     return next(
       new ErrorHandler(
@@ -199,6 +200,7 @@ exports.updatePassword = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("Old password is incorrect"));
   }
 
+  // Set the new password
   user.password = req.body.password;
   await user.save();
   // we have updated the password
@@ -208,6 +210,7 @@ exports.updatePassword = catchAsyncErrors(async (req, res, next) => {
 
 // Logout user => /api/v1/logout
 exports.logout = catchAsyncErrors(async (req, res, next) => {
+  // res.cookie("token", "none", {
   res.cookie("token", null, {
     expires: new Date(Date.now()),
     httpOnly: true,
@@ -215,6 +218,6 @@ exports.logout = catchAsyncErrors(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    message: "Logged out",
+    message: "Logged out successfully",
   });
 });
