@@ -22,20 +22,18 @@ exports.isAuthenticatedUser = catchAsyncErros(async (req, res, next) => {
   // We can authenticate users on the backend via cookies.
   // Access token from req.cookies.
 
-    const { token } = req.cookies;
+  const { token } = req.cookies;
 
-    // Check whether the cookie exists
-    if (!token) {
-      return next(
-        new ErrorHandler("Login first to access this resource.", 401)
-      );
-    }
-    // If token exists verify the user
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    // Look for user in database and make the logged-in available on req.user
-    req.user = await User.findById(decoded.id);
+  // Check whether the cookie exists
+  if (!token) {
+    return next(new ErrorHandler("Login first to access this resource.", 401));
+  }
+  // If token exists verify the user
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  // Look for user in database and make the logged-in available on req.user
+  req.user = await User.findById(decoded.id);
 
-    next();
+  next();
 
   // Another way would be to move the token to the frontend
   // and afterwards pass the token again to the backend,
@@ -59,9 +57,25 @@ exports.isAuthenticatedUser = catchAsyncErros(async (req, res, next) => {
   //  req.user = await User.findById(decoded.id);
 
   //  next();
-
-
 });
+
+  // =======================================================================================/
+
+  // Yet another way of authentication would be through using
+  // express-jwt package
+
+  // import expressJwt from "express-jwt";
+
+  // jwt-express will check for valid token in header
+  // if token is valid req.user is returned
+  // where we can access id via req.user.id
+
+  // export const requireSignin = expressJwt({
+  //   getToken: (req, res) => req.cookies.token,
+  //   secret: process.env.JWT_SECRET,
+  //   algorithms: ["HS256"],
+  // });
+
 
 // Handle users roles
 exports.authorizeRoles = (...roles) => {
