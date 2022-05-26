@@ -2,6 +2,8 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const errorMiddleware = require("./middlewares/errors");
 const ErrorHandler = require("./utils/errorHandler");
+const rateLimit = require("express-rate-limit");
+const helmet = require("helmet");
 
 // Import routes
 const products = require("./routes/product");
@@ -14,10 +16,14 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
+// Setup security headers
+app.use(helmet());
+
 // Rate Limit
 const limiter = rateLimit({
   // 10 minutes
   windowMs: 10 * 60 * 1000,
+  // Max number of requests per windowMs minutes
   max: 100,
 });
 
